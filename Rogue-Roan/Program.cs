@@ -1,10 +1,14 @@
-﻿namespace Rogue_Roan
+﻿using Rogue_Roan.Model.Mapping;
+
+namespace Rogue_Roan
 {
     internal class Program
     {
         static void Main(string[] args)
         {
-            Console.WriteLine("Hello, World!");
+            DungeonLevel dl = new DungeonLevel();
+
+            dl.DisplayDetail();
         }
     }
 }
