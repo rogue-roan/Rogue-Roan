@@ -10,12 +10,20 @@ namespace Rogue_Roan.Model.Mapping
     {
         public Dictionary<Room, RoomPosition> DonjonRooms = new Dictionary<Room, RoomPosition>();
 
-        public DungeonLevel()
+        public DungeonLevel(uint minNumberOfRoom = 5)
         {
-            DonjonRooms.Add(new Room(), new RoomPosition { TopOrigin = 0, LeftOrigin = 0 });
+            if (minNumberOfRoom == 0) minNumberOfRoom = 5;
+
+            for(int i = 0; i < minNumberOfRoom; i++)
+            {
+                DonjonRooms.Add(new Room(), new RoomPosition());
+            }
         }
 
         #region Debug Function
+        /// <summary>
+        /// Function de debug of the dictionnary of all room of this specific dunjeon level
+        /// </summary>
         public void DisplayDetail()
         {
             foreach (Room roomInDl in this.DonjonRooms.Keys)
@@ -26,10 +34,16 @@ namespace Rogue_Roan.Model.Mapping
         
     #endregion
 }
-    public struct RoomPosition
+    public class RoomPosition
     {
         // Corner Top Left
         public int TopOrigin { get; set; }
         public int LeftOrigin { get; set; }
+
+        public RoomPosition(int top = 1, int left = 1) 
+        {
+            TopOrigin = top;
+            LeftOrigin = left;
+        }
     }
 }

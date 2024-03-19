@@ -6,7 +6,7 @@ namespace Rogue_Roan
     {
         static void Main(string[] args)
         {
-            DungeonLevel dl = new DungeonLevel();
+            DungeonLevel dl = new DungeonLevel(10);
 
             dl.DisplayDetail();
         }
