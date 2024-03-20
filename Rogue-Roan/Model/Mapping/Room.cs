@@ -8,6 +8,8 @@ namespace Rogue_Roan.Model.Mapping
 {
     public class Room
     {
+        // How is this room is defined ? 
+        // doors north ? full opened ?
         private WallAttribute _wallAtribute;
 
         public WallAttribute WallAtribute
@@ -16,26 +18,169 @@ namespace Rogue_Roan.Model.Mapping
             set { _wallAtribute = value; }
         }
 
-        // Dimension without Walls
+        // Wall included
         public int Height { get; set; }
         public int Width { get; set; }
 
-        public Room()
+        // What is in this room (wall included)
+        private string[][] _content;
+
+        public string[][] Content
+        {
+            get { return _content; }
+            private set { _content = value; }
+        }
+
+        /// <summary>
+        /// Constructor of a room
+        /// </summary>
+        /// <param name="randomGeneration">is Room generation from a random value for his doors and openings ?</param>
+        public Room(bool randomGeneration = true)
         {
             Height = 10;
             Width = 10;
-            WallAtribute = WallAttribute.NorthOpening;
+            if (randomGeneration) WallAtribute = randomWallAttribute();
+            // TODO define a new method to assign attribute to a room
+            else WallAtribute = WallAttribute.None;
+
+            Content = DrawRoom();
         }
+
+        /// <summary>
+        /// Function of generation in a random way
+        /// </summary>
+        /// <returns>Combinaison of wall attribute</returns>
         public WallAttribute randomWallAttribute()
         {
             Random random = new Random();
-
+            
+            // remind :
+            // 0 =>  0000
+            // 15 => 1111
             int doors = random.Next(0, 16);
 
-            int opening = random.Next(16, 257);
-            if (opening == 256) opening = 0;
+            int opening = random.Next(0, 16);
 
-            return (WallAttribute)(((doors & (opening >> 4))) | opening);
+            // rule opening > door
+            doors = doors & ~opening;
+
+            //opening is 4 bit highter
+            // 00001 => 10000
+            opening <<= 4;
+
+            return (WallAttribute)(doors | opening);
+        }
+
+        /// <summary>
+        /// In this function, this room gain is wall from his WallAtribute
+        /// In the futur, It will also have some decoration
+        /// </summary>
+        /// <returns></returns>
+        public string[][] DrawRoom()
+        {
+            // initialisation
+            string[][] room = new string[Height][];
+            for(int i = 0; i < room.GetLength(0); i++)
+            {
+                room[i] = new string[Width];
+                for(int j = 0; j < room[i].GetLength(0); j++)
+                {
+                    room[i][j] = " ";
+                }
+            }
+
+            // put some wall
+            for (int i = 0; i < room.GetLength(0); i++)
+            {
+                for (int j = 0; j < room[i].GetLength(0); j++)
+                {
+                    // lines
+                    // first line
+                    if (i == 0)
+                    {
+                        if (HasThisWallAttribute(WallAttribute.NorthOpening))
+                        {
+                            if((!HasThisWallAttribute(WallAttribute.WestOpening) && j == 0) ||
+                                (!HasThisWallAttribute(WallAttribute.EastOpening) && j == room[i].GetLength(0) - 1))
+                            {
+                                room[i][j] = "=";
+                            }
+                        }
+                        else if (HasThisWallAttribute(WallAttribute.NorthDoor))
+                        {
+                            if (j != room[i].GetLength(0) / 2) room[i][j] = "=";
+                        }
+                        else
+                        {
+                            room[i][j] = "=";
+                        }
+                    }
+                    // last line
+                    if (i == room.GetLength(0) - 1)
+                    {
+                        if (HasThisWallAttribute(WallAttribute.SouthOpening))
+                        {
+                            if ((!HasThisWallAttribute(WallAttribute.WestOpening) && j == 0) ||
+                                (!HasThisWallAttribute(WallAttribute.EastOpening) && j == room[i].GetLength(0) - 1))
+                            {
+                                room[i][j] = "=";
+                            }
+                        }
+                        else if (HasThisWallAttribute(WallAttribute.SouthDoor))
+                        {
+                            if (j != room[i].GetLength(0) / 2) room[i][j] = "=";
+                        }
+                        else
+                        {
+                            room[i][j] = "=";
+                        }
+                    }
+
+                    // columns
+                    // first column
+                    if (j == 0)
+                    {
+                        if (HasThisWallAttribute(WallAttribute.WestOpening))
+                        {
+                            if ((!HasThisWallAttribute(WallAttribute.NorthOpening) && i == 0) ||
+                                (!HasThisWallAttribute(WallAttribute.SouthOpening) && i == room[i].GetLength(0) - 1))
+                            {
+                                room[i][j] = "=";
+                            }
+                        }
+                        else if (HasThisWallAttribute(WallAttribute.WestDoor))
+                        {
+                            if (i != room[i].GetLength(0) / 2) room[i][j] = "=";
+                        }
+                        else
+                        {
+                            room[i][j] = "=";
+                        }
+                    }
+                    // last column
+                    if (j == room.GetLength(0) - 1)
+                    {
+                        if (HasThisWallAttribute(WallAttribute.EastOpening))
+                        {
+                            if ((!HasThisWallAttribute(WallAttribute.NorthOpening) && i == 0) ||
+                                (!HasThisWallAttribute(WallAttribute.SouthOpening) && i == room[i].GetLength(0) - 1))
+                            {
+                                room[i][j] = "=";
+                            }
+                        }
+                        else if (HasThisWallAttribute(WallAttribute.EastDoor))
+                        {
+                            if (i != room[i].GetLength(0) / 2) room[i][j] = "=";
+                        }
+                        else
+                        {
+                            room[i][j] = "=";
+                        }
+                    }
+                }
+            }
+
+            return room;
         }
 
         #region Debug Function
@@ -55,19 +200,5 @@ namespace Rogue_Roan.Model.Mapping
         #endregion
     }
 
-    [Flags]
-    public enum WallAttribute : int
-    { 
-        None = 0,
-        // Doors
-        NorthDoor = 1,
-        WestDoor = 2,
-        SouthDoor = 4,
-        EastDoor = 8,
-        // Openings
-        NorthOpening = 16,
-        WestOpening = 32,
-        SouthOpening = 64,
-        EastOpening = 128
-    }
+    
 }
