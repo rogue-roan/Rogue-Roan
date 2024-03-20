@@ -10,17 +10,19 @@ namespace Rogue_Roan.Tools
     {
         public static int CalculateModifier(int stat)
         {
-            switch (stat)
-            {
-                case < 5:
-                    return -1;
-                case < 10:
-                    return 0;
-                case < 15:
-                    return 1;
-                default:
-                    return 2;
-            }
+            //switch (stat)
+            //{
+            //    case < 5:
+            //        return -1;
+            //    case < 10:
+            //        return 0;
+            //    case < 15:
+            //        return 1;
+            //    default:
+            //        return 2;
+            //}
+
+            return (stat-10)/2;
         }
     }
 }
