@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Rogue_Roan.Tools;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -8,12 +9,24 @@ namespace Rogue_Roan.Models
 {
     public abstract class Player : Character
     {
-        public Player(string race, string name, int endRaceBonus, int strRaceBonus, int agiRaceBonus, int luckRaceBonus) : base(race, name, endRaceBonus, strRaceBonus, agiRaceBonus, luckRaceBonus)
+        public Player(string race, string name, int endRaceBonus, int strRaceBonus, int agiRaceBonus, int luckRaceBonus) : base(race, name, endRaceBonus, strRaceBonus, agiRaceBonus)
         {
+            Dice dice = new Dice(1, 6); // dé utilisé pour la création de personnage
             HPMax = HP;
+            LuckRaceBonus = luckRaceBonus; // à enlever, seuls les Pjs ont de la chance à moins que la chance ne serve pour les monstres pour déterminer leur loot ?
+            _luck = dice.BestOf(4, 3);
         }
-        private int HPMax {  get; set; }
-
+        private int HPMax { get; set; }
+        // Chance
+        private int _luck;
+        public int Luck
+        {
+            get
+            {
+                return _luck + LuckRaceBonus;
+            }
+        }
+        public int LuckRaceBonus { get; set; }
         public void RegenerateLife()
         {
             HP = HPMax;
@@ -35,6 +48,11 @@ namespace Rogue_Roan.Models
 
             }
             target.Equipment.Clear();
+        }
+        // override de ToString pour qu'il affiche le texte lorsque player.ToString();
+        public override string ToString()
+        {
+            return base.ToString()+$", Chance {Luck}";
         }
     }
 }

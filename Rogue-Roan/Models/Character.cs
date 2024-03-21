@@ -18,8 +18,7 @@ namespace Rogue_Roan.Models
         /// <param name="endRaceBonus">son bonus racial d'endurance</param>
         /// <param name="strRaceBonus">son bonus racial de force</param>
         /// <param name="agiRaceBonus">son bonus racial d'agilité</param>
-        /// <param name="luckRaceBonus">son bonus racial de chance</param>
-        public Character(string race, string name, int endRaceBonus, int strRaceBonus, int agiRaceBonus, int luckRaceBonus)
+        public Character(string race, string name, int endRaceBonus, int strRaceBonus, int agiRaceBonus)
         {
             Name = name;
             Race = race;
@@ -27,11 +26,11 @@ namespace Rogue_Roan.Models
             EndRaceBonus = endRaceBonus;
             StrRaceBonus = strRaceBonus;
             AgiRaceBonus = agiRaceBonus;
-            LuckRaceBonus = luckRaceBonus;
+            
             _strenght = dice.BestOf(4, 3);
             _endurance = dice.BestOf(4, 3);
             _agility = dice.BestOf(4, 3);
-            _luck = dice.BestOf(4, 3);
+            
             HP = 10 + Modifiers.CalculateModifier(Endurance);
         }
 
@@ -76,16 +75,7 @@ namespace Rogue_Roan.Models
         }
         public int AgiRaceBonus { get; set; }
 
-        // Chance
-        private int _luck; 
-        public int Luck  
-        {
-            get
-            {
-                return _luck + LuckRaceBonus;
-            }
-        }
-        public int LuckRaceBonus { get; set; }
+        
 
         // points de vie
         private int _hp;
@@ -154,7 +144,7 @@ namespace Rogue_Roan.Models
         // override de Tostring pour qu'il affiche le texte lorsque personnage.ToString();
         public override string ToString()
         {
-            return $"{Name} - Endu : {Endurance}, Force : {Strenght}, Agilite : {Agility}, Chance : {Luck}, Pv : {HP}";
+            return $"{Name} - Pv : {HP}, Endu : {Endurance}, Force : {Strenght}, Agilite : {Agility}";
         }
     }
 }

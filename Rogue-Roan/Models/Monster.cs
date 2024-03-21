@@ -10,7 +10,7 @@ namespace Rogue_Roan.Models
 {
     public abstract class Monster : Character
     {
-        public Monster(string race, string name, int endRaceBonus, int strRaceBonus, int agiRaceBonus, int luckRaceBonus) : base(race, name, endRaceBonus, strRaceBonus, agiRaceBonus, luckRaceBonus)
+        public Monster(string race, string name, int endRaceBonus, int strRaceBonus, int agiRaceBonus) : base(race, name, endRaceBonus, strRaceBonus, agiRaceBonus)
         {
 
         }
