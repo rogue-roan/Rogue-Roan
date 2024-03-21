@@ -12,8 +12,8 @@ namespace Rogue_Roan.Models.Ennemies
     {
         public Orc(string name) : base("Orque", name, 1, 2, -2)
         {
-            // donne 1D20 po
-            Dice diceGold = new Dice(1, 20);
+            // donne 1D200 po
+            Dice diceGold = new Dice(1, 200);
             Equipment.Add(Items.Gold, diceGold.Throw());
 
         }

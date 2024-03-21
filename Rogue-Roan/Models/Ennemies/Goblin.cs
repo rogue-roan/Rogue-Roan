@@ -12,8 +12,8 @@ namespace Rogue_Roan.Models.Ennemies
     {
         public Goblin(string name) : base("Gobelin", name, -1, -2, +2)
         {
-            // donne 1D6 po
-            Dice diceGold = new Dice(1, 6);
+            // donne 1D100 po
+            Dice diceGold = new Dice(1, 100);
             Equipment.Add(Items.Gold, diceGold.Throw());
 
         }

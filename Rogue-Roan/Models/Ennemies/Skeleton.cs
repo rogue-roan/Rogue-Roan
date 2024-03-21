@@ -12,8 +12,8 @@ namespace Rogue_Roan.Models.Ennemies
     {
         public Skeleton(string name) : base("Squelette", name, 2, 0, -2)
         {
-            // donne 1D10 po
-            Dice diceGold = new Dice(1, 10);
+            // donne 1D50 po
+            Dice diceGold = new Dice(1, 50);
             Equipment.Add(Items.Gold,diceGold.Throw());
         }
     }

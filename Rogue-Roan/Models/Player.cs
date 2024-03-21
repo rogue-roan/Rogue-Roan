@@ -13,7 +13,7 @@ namespace Rogue_Roan.Models
         {
             Dice dice = new Dice(1, 6); // dé utilisé pour la création de personnage
             HPMax = HP;
-            LuckRaceBonus = luckRaceBonus; // à enlever, seuls les Pjs ont de la chance à moins que la chance ne serve pour les monstres pour déterminer leur loot ?
+            LuckRaceBonus = luckRaceBonus; 
             _luck = dice.BestOf(4, 3);
         }
         private int HPMax { get; set; }
@@ -32,18 +32,22 @@ namespace Rogue_Roan.Models
             HP = HPMax;
             Console.WriteLine($"{Name} revient à {HP} Points de vie");
         }
-        public void Loot(Monster target)
+        public void Loot(Monster target) 
         {
             foreach (var item in target.Equipment)
             {
-                Console.WriteLine($"{Name} loot {item.Value} {item.Key} sur {target.Name}");
+                float lootWithLuckBonus = 1 + ((float)Luck / 100);
+                Console.WriteLine($"la valeur de loot est {lootWithLuckBonus}");
+
+                int numberOfStuff = (int)(item.Value*lootWithLuckBonus);
+                Console.WriteLine($"{Name} trouve {numberOfStuff} {item.Key} sur {target.Name}");
                 if (Equipment.ContainsKey(item.Key))
                 {
-                    Equipment[item.Key] += item.Value;
+                    Equipment[item.Key] += numberOfStuff;
                 }
                 else
                 {
-                    Equipment.Add(item.Key, item.Value);
+                    Equipment.Add(item.Key, numberOfStuff);
                 }
 
             }
@@ -52,7 +56,7 @@ namespace Rogue_Roan.Models
         // override de ToString pour qu'il affiche le texte lorsque player.ToString();
         public override string ToString()
         {
-            return base.ToString()+$", Chance {Luck}";
+            return base.ToString()+$", Chance : {Luck}";
         }
     }
 }
