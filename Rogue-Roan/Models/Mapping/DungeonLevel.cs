@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Rogue_Roan.Enums.Mapping;
 
 namespace Rogue_Roan.Model.Mapping
 {
@@ -16,7 +17,7 @@ namespace Rogue_Roan.Model.Mapping
 
             for(int i = 0; i < minNumberOfRoom; i++)
             {
-                DonjonRooms.Add(new Room(), new RoomPosition());
+                DonjonRooms.Add(new Room(fullRandomGeneration : false, partiallyRandomGeneration : true, WallAttribute.NorthDoor), new RoomPosition());
             }
         }
         
@@ -47,6 +48,9 @@ namespace Rogue_Roan.Model.Mapping
                 if (roomInDl.HasThisWallAttribute(WallAttribute.WestDoor)) doorX--;
                 else if (roomInDl.HasThisWallAttribute(WallAttribute.WestOpening)) openingX--;
             }
+
+            // conditionnal 2 : room position (room overlapsed)
+            // conditionnal 3 : doors connected
 
             if (doorY == 0 && openingY == 0) return true;
             return false;

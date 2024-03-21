@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Rogue_Roan.Enums.Mapping;
 
 namespace Rogue_Roan.Model.Mapping
 {
@@ -34,12 +35,15 @@ namespace Rogue_Roan.Model.Mapping
         /// <summary>
         /// Constructor of a room
         /// </summary>
-        /// <param name="randomGeneration">is Room generation from a random value for his doors and openings ?</param>
-        public Room(bool randomGeneration = true)
+        /// <param name="fullRandomGeneration">is Room generation from a random value for all his doors and openings ?</param>
+        /// <param name="partiallyRandomGeneration">With a constraint defined, is Room generated from a random value for his doors and openings remaining ?</param>
+        /// <param name="constraint">constraint for some or all wall</param>
+        public Room(bool fullRandomGeneration = true, bool partiallyRandomGeneration = false, WallAttribute constraint = WallAttribute.None)
         {
             Height = 10;
             Width = 10;
-            if (randomGeneration) WallAtribute = randomWallAttribute();
+            if (fullRandomGeneration) WallAtribute = randomWallAttribute();
+            else if (partiallyRandomGeneration) WallAtribute = randomWallAttribute(constraint);
             // TODO define a new method to assign attribute to a room
             else WallAtribute = WallAttribute.None;
 
@@ -49,8 +53,9 @@ namespace Rogue_Roan.Model.Mapping
         /// <summary>
         /// Function of generation in a random way
         /// </summary>
+        /// /// <param name="constraint">first wallAttributed wanted</param>
         /// <returns>Combinaison of wall attribute</returns>
-        public WallAttribute randomWallAttribute()
+        public WallAttribute randomWallAttribute(WallAttribute constraint = ~WallAttribute.None)
         {
             Random random = new Random();
             
@@ -68,7 +73,7 @@ namespace Rogue_Roan.Model.Mapping
             // 00001 => 10000
             opening <<= 4;
 
-            return (WallAttribute)(doors | opening);
+            return constraint | (~constraint & (WallAttribute)(doors | opening));
         }
 
         /// <summary>

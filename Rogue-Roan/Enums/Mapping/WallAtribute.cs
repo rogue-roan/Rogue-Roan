@@ -1,4 +1,4 @@
-﻿namespace Rogue_Roan.Model.Mapping
+﻿namespace Rogue_Roan.Enums.Mapping
 {
     [Flags]
     public enum WallAttribute : int
