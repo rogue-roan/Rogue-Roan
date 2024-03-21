@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Rogue_Roan.Models
 {
-    internal class Player : Character
+    public abstract class Player : Character
     {
         public Player(string race, string name, int endRaceBonus, int strRaceBonus, int agiRaceBonus, int luckRaceBonus) : base(race, name, endRaceBonus, strRaceBonus, agiRaceBonus, luckRaceBonus)
         {
