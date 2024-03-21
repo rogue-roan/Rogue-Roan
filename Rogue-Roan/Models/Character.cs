@@ -32,7 +32,7 @@ namespace Rogue_Roan.Models
             _endurance = dice.BestOf(4, 3);
             _agility = dice.BestOf(4, 3);
             _luck = dice.BestOf(4, 3);
-            PV = 10 + Modifiers.CalculateModifier(Endurance);
+            HP = 10 + Modifiers.CalculateModifier(Endurance);
         }
 
         // positionnement du personnage
@@ -88,22 +88,22 @@ namespace Rogue_Roan.Models
         public int LuckRaceBonus { get; set; }
 
         // points de vie
-        private int _pv;
-        public int PV
+        private int _hp;
+        public int HP
         {
             get
             {
-                return _pv;
+                return _hp;
             }
             set
             {
                 if (value < 0)
                 {
-                    _pv = 0;
+                    _hp = 0;
                 }
                 else
                 {
-                    _pv = value;
+                    _hp = value;
                 }
             }
         }
@@ -113,7 +113,7 @@ namespace Rogue_Roan.Models
         {
             get
             {
-                return PV <= 0; //renvoie vrai si les PV sont <0 
+                return HP <= 0; //renvoie vrai si les PV sont <0 
             }
         }
 
@@ -143,7 +143,7 @@ namespace Rogue_Roan.Models
                 // les dégâts sont au minimum égaux à 1
                 int damages = damageThrow < 1 ? 1 : damageThrow;
                 Console.WriteLine($"{Name} touche {target.Name} et fait {damages} points de dégâts");
-                target.PV -= damages;
+                target.HP -= damages;
             }
             else
             {
@@ -154,7 +154,7 @@ namespace Rogue_Roan.Models
         // override de Tostring pour qu'il affiche le texte lorsque personnage.ToString();
         public override string ToString()
         {
-            return $"{Name} - Endu : {Endurance}, Force : {Strenght}, Agilite : {Agility}, Chance : {Luck}, Pv : {PV}";
+            return $"{Name} - Endu : {Endurance}, Force : {Strenght}, Agilite : {Agility}, Chance : {Luck}, Pv : {HP}";
         }
     }
 }
