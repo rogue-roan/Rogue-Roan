@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Rogue_Roan.Enums.Mapping;
 
 namespace Rogue_Roan.Model.Mapping
 {
