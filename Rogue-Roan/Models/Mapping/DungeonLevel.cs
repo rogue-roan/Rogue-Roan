@@ -49,6 +49,9 @@ namespace Rogue_Roan.Model.Mapping
                 else if (roomInDl.HasThisWallAttribute(WallAttribute.WestOpening)) openingX--;
             }
 
+            // conditionnal 2 : room position (room overlapsed)
+            // conditionnal 3 : doors connected
+
             if (doorY == 0 && openingY == 0) return true;
             return false;
         }
