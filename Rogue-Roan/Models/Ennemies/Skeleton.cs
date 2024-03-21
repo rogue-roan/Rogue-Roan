@@ -10,7 +10,7 @@ namespace Rogue_Roan.Models.Ennemies
 {
     public class Skeleton : Monster
     {
-        public Skeleton(string name) : base("Orque", name, 2, 0, -2)
+        public Skeleton(string name) : base("Squelette", name, 2, 0, -2)
         {
             // donne 1D10 po
             Dice diceGold = new Dice(1, 10);
