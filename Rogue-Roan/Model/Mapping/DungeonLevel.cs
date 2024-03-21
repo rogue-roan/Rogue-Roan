@@ -19,7 +19,7 @@ namespace Rogue_Roan.Model.Mapping
                 DonjonRooms.Add(new Room(), new RoomPosition());
             }
         }
-
+        
         /// <summary>
         /// This function will indicate if all opening and door of each room are connected to something
         /// 
