@@ -1,4 +1,5 @@
 ﻿using Rogue_Roan.Enums.Mapping;
+using Rogue_Roan.Model.Mapping;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -17,13 +18,21 @@ namespace Rogue_Roan.Models.Mapping
 
         // A la fin je dois renvoyer un layout de piece
 
-        public void DecorateRoom(int roomHeight, int roomWidth, WallAttribute wallAttribute)
+
+
+
+
+        // Récupération de la taille des piece
+        private int roomWidth = 10;
+        private int roomHeight = 10;
+        //Coefficient par lequel on divise la taille de la piece
+        public int factor = 4;
+
+
+        public void DecorateRoom(WallAttribute wallAttribute)
         {
-            //Coefficient par lequel on divise la taille de la piece
-            int factor = 4;
             //Le max de déco sera aire de la piece divisé par factor
             int maxDecoration = (roomHeight * roomWidth) / factor;
-
 
             // Récupérer les positions des portes:
             int NorthDoor = 0;
@@ -31,16 +40,17 @@ namespace Rogue_Roan.Models.Mapping
             int WestDoor = 0;
             int EastDoor = 0;
 
-
             // Comment s'assurer qu'il y ai tjs un chemin dans la piece?
             /*
              * Soit définir un ou des chemin et empecher la création de décors dessus?
              * 
              */
-            if (NorthDoor)
-            {
 
-            }
+
+            //if (NorthDoor)
+            //{
+
+            //}
         }
 
 
@@ -49,13 +59,20 @@ namespace Rogue_Roan.Models.Mapping
     }
 
     // Il faudrait refactoriser les méthode d'assignation avec des formules mathématiques
+    // Enlever les portes du tableau. Elle me seront fournie
     public class RoomRestriction
     {
         // Chemin de croix
-        public int[][] crossWalk = new int[10][];
+        public int[][] crossWalk = new int[20][];
         public void CrossRoadAssignation()
         {
-            crossWalk[0] = new int[] { 0, 5 };
+
+            // Ligne vertical
+            //crossWalk[0] = new int[] { 0, 5 }; Position d'une porte
+            for (int i = 0; i < Room.Width; i++)
+            {
+
+            }
             crossWalk[1] = new int[] { 1, 5 };
             crossWalk[2] = new int[] { 2, 5 };
             crossWalk[3] = new int[] { 3, 5 };
@@ -65,7 +82,21 @@ namespace Rogue_Roan.Models.Mapping
             crossWalk[7] = new int[] { 7, 5 };
             crossWalk[8] = new int[] { 8, 5 };
             crossWalk[9] = new int[] { 9, 5 };
-            crossWalk[10] = new int[] { 10, 5 };
+            //crossWalk[10] = new int[] { 10, 5 }; Position d'une porte
+
+
+            //Ligne horizontale
+            //crossWalk[0] = new int[] { 5, 0 }; Position d'une porte
+            crossWalk[1] = new int[] { 5, 1 };
+            crossWalk[2] = new int[] { 5, 2 };
+            crossWalk[3] = new int[] { 5, 3 };
+            crossWalk[4] = new int[] { 5, 4 };
+            crossWalk[5] = new int[] { 5, 5 };
+            crossWalk[6] = new int[] { 5, 6 };
+            crossWalk[7] = new int[] { 5, 7 };
+            crossWalk[8] = new int[] { 5, 8 };
+            crossWalk[9] = new int[] { 5, 9 };
+            //crossWalk[10] = new int[] { 5, 10 }; Position d'une porte
         }
 
         // Chemin longeant les murs
