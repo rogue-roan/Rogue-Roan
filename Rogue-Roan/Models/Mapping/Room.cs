@@ -35,17 +35,15 @@ namespace Rogue_Roan.Model.Mapping
         /// <summary>
         /// Constructor of a room
         /// </summary>
-        /// <param name="fullRandomGeneration">is Room generation from a random value for all his doors and openings ?</param>
-        /// <param name="partiallyRandomGeneration">With a constraint defined, is Room generated from a random value for his doors and openings remaining ?</param>
+        /// <param name="randomGeneration">is Room generation from a random value for all his doors and openings ?</param>
         /// <param name="constraint">constraint for some or all wall</param>
-        public Room(bool fullRandomGeneration = true, bool partiallyRandomGeneration = false, WallAttribute constraint = WallAttribute.None)
+        public Room(bool randomGeneration = true, WallAttribute constraint = ~WallAttribute.None)
         {
             Height = 10;
             Width = 10;
-            if (fullRandomGeneration) WallAtribute = randomWallAttribute();
-            else if (partiallyRandomGeneration) WallAtribute = randomWallAttribute(constraint);
+            if (randomGeneration) WallAtribute = randomWallAttribute(constraint);
             // TODO define a new method to assign attribute to a room
-            else WallAtribute = WallAttribute.None;
+            else WallAtribute = constraint;
 
             Content = DrawRoom();
         }

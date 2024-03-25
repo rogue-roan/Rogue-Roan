@@ -17,7 +17,7 @@ namespace Rogue_Roan.Model.Mapping
 
             for(int i = 0; i < minNumberOfRoom; i++)
             {
-                DonjonRooms.Add(new Room(fullRandomGeneration : false, partiallyRandomGeneration : true, WallAttribute.NorthDoor), new RoomPosition());
+                DonjonRooms.Add(new Room(randomGeneration : true, WallAttribute.NorthDoor), new RoomPosition());
             }
         }
         
