@@ -36,7 +36,7 @@ namespace Rogue_Roan.Models
         {
             foreach (var item in target.Equipment)
             {
-                float lootWithLuckBonus = 1 + ((float)Luck / 100);
+                float lootWithLuckBonus = 1 + ((float)Luck / 100); // le loot est modifié par la chance du joueur
                 Console.WriteLine($"la valeur de loot est {lootWithLuckBonus}");
 
                 int numberOfStuff = (int)(item.Value*lootWithLuckBonus);
