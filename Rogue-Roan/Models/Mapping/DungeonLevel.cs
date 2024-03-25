@@ -71,16 +71,21 @@ namespace Rogue_Roan.Model.Mapping
         
     #endregion
 }
-    public class RoomPosition
+    public class RoomPosition : ICloneable
     {
         // Corner Top Left
         public int TopOrigin { get; set; }
         public int LeftOrigin { get; set; }
 
-        public RoomPosition(int top = 1, int left = 1) 
+        public RoomPosition(int top = 0, int left = 0) 
         {
             TopOrigin = top;
             LeftOrigin = left;
+        }
+
+        public object Clone()
+        {
+            return new RoomPosition(top:TopOrigin, left:LeftOrigin);
         }
     }
 }
