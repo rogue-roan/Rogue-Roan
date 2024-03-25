@@ -90,6 +90,82 @@ namespace Rogue_Roan.Game
             // demander les stats
             // pas de methode car je n'utiliserai ça qu'ici
 
+            // l'idée c'est de tout afficher, une valeur pour dire où se trouve la croix tout commence à 10 + pour augmenter - pour diminuer minimum 3 maximum 18 on affiche les points restants au dessus (calcule par X-valeur de chaque carac)
+
+            int startCP = 22;
+            int strenght = 10;
+            string crossStrenght = "X";
+            int strenghtCost = CostCalcul(strenght);
+            int endurance = 10;
+            string crossEndurance = " ";
+            int enduranceCost = CostCalcul(endurance);
+            int agility = 10;
+            string crossAgility = " ";
+            int agilityCost = CostCalcul(agility);
+            int luck = 10;
+            string crossLuck = " ";
+            int luckCost = CostCalcul(luck);
+            int costCP = strenghtCost + enduranceCost + agilityCost + luckCost;
+            int CP = startCP - costCP;
+            string error = "";
+            char key =' ';
+
+            int strenghtBonus = 2;
+            int enduranceBonus = 2;
+            int agilityBonus = 2;
+            int luckBonus = 2;
+
+            do
+            {
+                Console.Clear(); 
+                costCP = strenghtCost + enduranceCost + agilityCost + luckCost;
+                CP = startCP - costCP;
+
+                Console.WriteLine($"il vous reste {CP} points {error}");
+                Console.WriteLine();
+                Console.WriteLine("╔═══════════════╦════╦════╦═════╦════╗");
+                Console.WriteLine("║Caractéristique║base║race║total║coût║");
+                Console.WriteLine("╠═══════════════╬════╬════╬═════╬════╣");
+
+
+                // ╔ ╩ ╦ ╔ ═ ╗ ║ ╚ ╝ ╣ ­ ╠ ╬ 
+
+                Console.WriteLine($"║[{crossStrenght}]Force\t║ {(strenght<10?" "+strenght:strenght)} ║{(strenghtBonus > 0 ? " " + strenghtBonus : strenghtBonus)}  ║ {(strenght+strenghtBonus<10?" "+ strenght + strenghtBonus: strenght + strenghtBonus)}  ║{(strenghtCost.ToString().Length == 1 ? "  " + strenghtCost : strenghtCost.ToString().Length == 2 ? " " + strenghtCost : strenghtCost)} ║");
+                Console.WriteLine($"║[{crossEndurance}]Endurance\t║ {(endurance<10?" "+endurance:endurance)} ║{(enduranceBonus >0 ? " " + enduranceBonus : enduranceBonus)}  ║ {(endurance + enduranceBonus<10?" "+ endurance + enduranceBonus: endurance + enduranceBonus)}  ║{(enduranceCost.ToString().Length == 1 ? "  " + enduranceCost : enduranceCost.ToString().Length == 2 ? " " + enduranceCost : enduranceCost)} ║");
+                Console.WriteLine($"║[{crossAgility}]Agilite\t║ {(agility < 10 ? " " + agility : agility)} ║{(agilityBonus > 0 ? " " + agilityBonus : agilityBonus)}  ║ {(agility + agilityBonus<10?" "+agility+agilityBonus: agility + agilityBonus)}  ║{(agilityCost.ToString().Length == 1 ? "  " + agilityCost : agilityCost.ToString().Length == 2 ? " " + agilityCost : agilityCost)} ║");
+                Console.WriteLine($"║[{crossLuck}]Chance\t║ {(luck < 10 ? " " + luck : luck)} ║{(luckBonus > 0 ? " " + luckBonus : luckBonus)}  ║ {(luck + luckBonus < 10 ? " " + luck + luckBonus : luck + luckBonus)}  ║{(luckCost.ToString().Length == 1 ? "  " + luckCost : luckCost.ToString().Length == 2 ? " " + luckCost : luckCost)}║");
+                Console.WriteLine("╚═══════════════╩════╩════╩═════╩════╝");
+                Console.WriteLine("Tapez \"T\" pour terminer");
+
+
+                //Console.WriteLine($"{(strenghtCost.ToString().Length==1?"  "+strenghtCost: strenghtCost.ToString().Length == 2 ?" "+strenghtCost:strenghtCost)}");
+
+                key = Console.ReadKey().KeyChar;
+                // cas : fleche du bas crossPosition = +1, si crossposition =4 alors +0
+                // cas : fleche du haut crossPosition = -1, si crossposition =1 alors -0
+                // cas : fleche a gauche
+                // si crossposition = 1 alors force -1 (sauf si = 3) : redéfinir error
+                // si crossposition = 2 alors endurance -1 (sauf si = 3) : redéfinir error
+                // si crossposition = 3 alors agilité -1 (sauf si = 3) : redéfinir error
+                // si crossposition = 4 alors chance -1 (sauf si = 3) : redéfinir error
+                // cas : fleche a droite
+                // si crossposition = 1 alors force +1 (sauf si = 18) : redéfinir error
+                // si crossposition = 2 alors endurance +1 (sauf si = 18) : redéfinir error
+                // si crossposition = 3 alors agilité +1 (sauf si = 18) : redéfinir error
+                // si crossposition = 4 alors chance +1 (sauf si = 18) : redéfinir error
+                // recalculer CP
+
+                Console.WriteLine($"vous avez tapé {key}");
+
+
+
+            } while (key != 't' && key != 'T');
+
+
+
+
+
+
 
             // retourner le personnage
 
@@ -157,6 +233,46 @@ namespace Rogue_Roan.Game
             } while (name == "");
 
             return name;
+        }
+        public static int CostCalcul(int carac)
+        {
+            switch (carac)
+            {
+                case 3:
+                    return -13;
+                case 4:
+                    return -10;
+                case 5:
+                    return -7;
+                case 6:
+                    return -5;
+                case 7:
+                    return -3;
+                case 8:
+                    return -2;
+                case 9:
+                    return -1;
+                case 11:
+                    return 1;
+                case 12:
+                    return 2;
+                case 13:
+                    return 3;
+                case 14:
+                    return 5;
+                case 15:
+                    return 7;
+                case 16:
+                    return 10;
+                case 17:
+                    return 13;
+                case 18:
+                    return 17;
+                default:
+                    return 0;
+            }
+
+
         }
     }
 }
