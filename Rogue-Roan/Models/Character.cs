@@ -12,7 +12,7 @@ namespace Rogue_Roan.Models
     {
 
         // revoir la generation de personnage, on doit mettre la valeur, elle n'est aléatoire que si la valeur n'est pas mise
-
+        // starts Now
 
 
         /// <summary>
