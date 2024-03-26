@@ -11,6 +11,10 @@ namespace Rogue_Roan.Models
     public abstract class Character //abstract : ne peut pas être instanciée directement.
     {
 
+        // revoir la generation de personnage, on doit mettre la valeur, elle n'est aléatoire que si la valeur n'est pas mise
+
+
+
         /// <summary>
         /// 
         /// </summary>

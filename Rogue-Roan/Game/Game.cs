@@ -87,89 +87,305 @@ namespace Rogue_Roan.Game
             // demander la race
             string race = RaceChoice();
 
-            // demander les stats
-            // pas de methode car je n'utiliserai ça qu'ici
+            // initialisation des valeurs
 
-            // l'idée c'est de tout afficher, une valeur pour dire où se trouve la croix tout commence à 10 + pour augmenter - pour diminuer minimum 3 maximum 18 on affiche les points restants au dessus (calcule par X-valeur de chaque carac)
-
+            // Points de création
             int startCP = 22;
+            int costCP = strenghtCost + enduranceCost + agilityCost + luckCost;
+            int CP = startCP - costCP;
+
+            // Force
             int strenght = 10;
             string crossStrenght = "X";
             int strenghtCost = CostCalcul(strenght);
+            int strenghtBonus;
+
+            // endurance
             int endurance = 10;
             string crossEndurance = " ";
             int enduranceCost = CostCalcul(endurance);
+            int enduranceBonus;
+
+            // Agilité
             int agility = 10;
             string crossAgility = " ";
             int agilityCost = CostCalcul(agility);
+            int agilityBonus;
+
+            // Chance
             int luck = 10;
             string crossLuck = " ";
             int luckCost = CostCalcul(luck);
-            int costCP = strenghtCost + enduranceCost + agilityCost + luckCost;
-            int CP = startCP - costCP;
-            string error = "";
-            char key =' ';
+            int luckBonus;
 
-            int strenghtBonus = 2;
-            int enduranceBonus = 2;
-            int agilityBonus = 2;
-            int luckBonus = 2;
+            // message en cas d'erreur
+            string error = "";
+
+            // Calcul des modificateurs raciaux
+            switch (race)
+            {
+                case "Humain":
+                    strenghtBonus = 1;
+                    enduranceBonus = 0;
+                    agilityBonus = 1;
+                    luckBonus = 0;
+                    break;
+                case "Nain":
+                    strenghtBonus = 2;
+                    enduranceBonus = 2;
+                    agilityBonus = -2;
+                    luckBonus = 0;
+                    break;
+                case "Elfe":
+                    strenghtBonus = 0;
+                    enduranceBonus = -2;
+                    agilityBonus = 2;
+                    luckBonus = 2;
+                    break;
+                case "Halfelin":
+                    strenghtBonus = -2;
+                    enduranceBonus = 0;
+                    agilityBonus = 2;
+                    luckBonus = 2;
+                    break;
+                default:
+                    strenghtBonus = 0;
+                    enduranceBonus = 0;
+                    agilityBonus = 0;
+                    luckBonus = 0;
+                    break;
+            }
+
+
+            // valeurs diverses
+
+            ConsoleKey key;
+            int crossPosition = 1;
+            bool exit = false;
 
             do
             {
-                Console.Clear(); 
-                costCP = strenghtCost + enduranceCost + agilityCost + luckCost;
-                CP = startCP - costCP;
+                
+                Console.Clear(); // on efface l'écran
+                costCP = strenghtCost + enduranceCost + agilityCost + luckCost; // on recalcule le cout total en CP
+                CP = startCP - costCP; // valeur de CP actuelle
 
-                Console.WriteLine($"il vous reste {CP} points {error}");
+                Console.WriteLine($"il vous reste {CP} points");
+                if (CP<0)
+                {
+                    Console.WriteLine("vous ne pouvez pas avoir un nombre de points négatif");
+                }
+                if (error!="") // s'il y a une erreur, on l'affiche
+                {
+                Console.WriteLine($"ATTENTION {error}");
+                    error = "";
+                }
+
+                // affichage du tableau
+
                 Console.WriteLine();
                 Console.WriteLine("╔═══════════════╦════╦════╦═════╦════╗");
                 Console.WriteLine("║Caractéristique║base║race║total║coût║");
                 Console.WriteLine("╠═══════════════╬════╬════╬═════╬════╣");
-
-
-                // ╔ ╩ ╦ ╔ ═ ╗ ║ ╚ ╝ ╣ ­ ╠ ╬ 
-
-                Console.WriteLine($"║[{crossStrenght}]Force\t║ {(strenght<10?" "+strenght:strenght)} ║{(strenghtBonus > 0 ? " " + strenghtBonus : strenghtBonus)}  ║ {(strenght+strenghtBonus<10?" "+ strenght + strenghtBonus: strenght + strenghtBonus)}  ║{(strenghtCost.ToString().Length == 1 ? "  " + strenghtCost : strenghtCost.ToString().Length == 2 ? " " + strenghtCost : strenghtCost)} ║");
-                Console.WriteLine($"║[{crossEndurance}]Endurance\t║ {(endurance<10?" "+endurance:endurance)} ║{(enduranceBonus >0 ? " " + enduranceBonus : enduranceBonus)}  ║ {(endurance + enduranceBonus<10?" "+ endurance + enduranceBonus: endurance + enduranceBonus)}  ║{(enduranceCost.ToString().Length == 1 ? "  " + enduranceCost : enduranceCost.ToString().Length == 2 ? " " + enduranceCost : enduranceCost)} ║");
-                Console.WriteLine($"║[{crossAgility}]Agilite\t║ {(agility < 10 ? " " + agility : agility)} ║{(agilityBonus > 0 ? " " + agilityBonus : agilityBonus)}  ║ {(agility + agilityBonus<10?" "+agility+agilityBonus: agility + agilityBonus)}  ║{(agilityCost.ToString().Length == 1 ? "  " + agilityCost : agilityCost.ToString().Length == 2 ? " " + agilityCost : agilityCost)} ║");
-                Console.WriteLine($"║[{crossLuck}]Chance\t║ {(luck < 10 ? " " + luck : luck)} ║{(luckBonus > 0 ? " " + luckBonus : luckBonus)}  ║ {(luck + luckBonus < 10 ? " " + luck + luckBonus : luck + luckBonus)}  ║{(luckCost.ToString().Length == 1 ? "  " + luckCost : luckCost.ToString().Length == 2 ? " " + luckCost : luckCost)}║");
+                Console.WriteLine($"║[{crossStrenght}]Force\t║ {(strenght<10?" "+strenght:strenght)} ║{(strenghtBonus >= 0 ? " " + strenghtBonus : strenghtBonus)}  ║ {(strenght+strenghtBonus<10?" "+ (strenght + strenghtBonus): (strenght + strenghtBonus))}  ║{(strenghtCost.ToString().Length == 1 ? "  " + strenghtCost : strenghtCost.ToString().Length == 2 ? " " + strenghtCost : strenghtCost)} ║");
+                Console.WriteLine($"║[{crossEndurance}]Endurance\t║ {(endurance<10?" "+endurance:endurance)} ║{(enduranceBonus >=0 ? " " + enduranceBonus : enduranceBonus)}  ║ {(endurance + enduranceBonus<10?" "+ (endurance + enduranceBonus): (endurance + enduranceBonus))}  ║{(enduranceCost.ToString().Length == 1 ? "  " + enduranceCost : enduranceCost.ToString().Length == 2 ? " " + enduranceCost : enduranceCost)} ║");
+                Console.WriteLine($"║[{crossAgility}]Agilite\t║ {(agility < 10 ? " " + agility : agility)} ║{(agilityBonus >= 0 ? " " + agilityBonus : agilityBonus)}  ║ {(agility + agilityBonus<10?" "+(agility+agilityBonus): (agility + agilityBonus))}  ║{(agilityCost.ToString().Length == 1 ? "  " + agilityCost : agilityCost.ToString().Length == 2 ? " " + agilityCost : agilityCost)} ║");
+                Console.WriteLine($"║[{crossLuck}]Chance\t║ {(luck < 10 ? " " + luck : luck)} ║{(luckBonus >= 0 ? " " + luckBonus : luckBonus)}  ║ {(luck + luckBonus < 10 ? " " + (luck + luckBonus) : (luck + luckBonus))}  ║{(luckCost.ToString().Length == 1 ? "  " + luckCost : luckCost.ToString().Length == 2 ? " " + luckCost : luckCost)} ║");
                 Console.WriteLine("╚═══════════════╩════╩════╩═════╩════╝");
+                Console.WriteLine();
+                Console.WriteLine($"utilisez les fléches haut/bas pour sélectioner la caractéristique");
+                Console.WriteLine($"utilisez les fléches gauches / droite pour modifier la caractéristique");
                 Console.WriteLine("Tapez \"T\" pour terminer");
 
+                key = Console.ReadKey().Key;
 
-                //Console.WriteLine($"{(strenghtCost.ToString().Length==1?"  "+strenghtCost: strenghtCost.ToString().Length == 2 ?" "+strenghtCost:strenghtCost)}");
-
-                key = Console.ReadKey().KeyChar;
-                // cas : fleche du bas crossPosition = +1, si crossposition =4 alors +0
+                switch (key)
+                {
+                    case ConsoleKey.LeftArrow:
+                        // cas : fleche a gauche
+                        switch (crossPosition)
+                        {
+                            case 1:
+                                if (strenght<=7)
+                                {
+                                    error = "la force ne peut pas être inférieure à 7";
+                                }
+                                else
+                                {
+                                    strenght--;
+                                }
+                                break;
+                            case 2:
+                                if (endurance <= 7)
+                                {
+                                    error = "l'endurance ne peut pas être inférieure à 7";
+                                }
+                                else
+                                {
+                                    endurance--;
+                                }
+                                break;
+                            case 3:
+                                if (agility <= 7)
+                                {
+                                    error = "l'agilité ne peut pas être inférieure à 7";
+                                }
+                                else
+                                {
+                                    agility--;
+                                }
+                                break;
+                            case 4:
+                                if (luck <= 7)
+                                {
+                                    error = "la chance ne peut pas être inférieure à 7";
+                                }
+                                else
+                                {
+                                    luck--;
+                                }
+                                break;
+                            default:
+                                break;
+                        }
+                        break;
+                    case ConsoleKey.UpArrow:
                 // cas : fleche du haut crossPosition = -1, si crossposition =1 alors -0
-                // cas : fleche a gauche
-                // si crossposition = 1 alors force -1 (sauf si = 3) : redéfinir error
-                // si crossposition = 2 alors endurance -1 (sauf si = 3) : redéfinir error
-                // si crossposition = 3 alors agilité -1 (sauf si = 3) : redéfinir error
-                // si crossposition = 4 alors chance -1 (sauf si = 3) : redéfinir error
-                // cas : fleche a droite
-                // si crossposition = 1 alors force +1 (sauf si = 18) : redéfinir error
-                // si crossposition = 2 alors endurance +1 (sauf si = 18) : redéfinir error
-                // si crossposition = 3 alors agilité +1 (sauf si = 18) : redéfinir error
-                // si crossposition = 4 alors chance +1 (sauf si = 18) : redéfinir error
-                // recalculer CP
+                        if (crossPosition!=1)
+                        {
+                            crossPosition--;
+                        }
+                        
+                        break;
+                    case ConsoleKey.RightArrow:
+                        switch (crossPosition)
+                        {
+                            case 1:
+                                if (strenght >= 18)
+                                {
+                                    error = "la force ne peut pas être supérieure à 18";
+                                }
+                                else
+                                {
+                                    strenght++;
+                                }
+                                break;
+                            case 2:
+                                if (endurance >= 18)
+                                {
+                                    error = "l'endurance ne peut pas être supérieure à 18";
+                                }
+                                else
+                                {
+                                    endurance++;
+                                }
+                                break;
+                            case 3:
+                                if (agility >= 18)
+                                {
+                                    error = "l'agilité ne peut pas être supérieure à 18";
+                                }
+                                else
+                                {
+                                    agility++;
+                                }
+                                break;
+                            case 4:
+                                if (luck >= 18)
+                                {
+                                    error = "la chance ne peut pas être supérieure à 18";
+                                }
+                                else
+                                {
+                                    luck++;
+                                }
+                                break;
+                            default:
+                                break;
+                        }
+                        break;
+                    case ConsoleKey.DownArrow:
+                        // cas : fleche du bas crossPosition = +1, si crossposition =4 alors +0
+                        if (crossPosition != 4)
+                        {
+                            crossPosition++;
+                        }
 
-                Console.WriteLine($"vous avez tapé {key}");
+                        break;
+                    case ConsoleKey.T:
+                        if (CP==0 && error=="")
+                        {
+                        exit = true;
+                        }
+                        else if (CP>0)
+                        {
+                            error = "il vous reste " + CP + " points à dépenser";
+                        }
+                        break;
+                    default:
+                        break;
+                }
 
 
+                // on recalcule le cout de chaque caractéristique
+                strenghtCost = CostCalcul(strenght);
+                enduranceCost = CostCalcul(endurance);
+                agilityCost = CostCalcul(agility);
+                luckCost = CostCalcul(luck);
 
-            } while (key != 't' && key != 'T');
+                // déplacement de la croix qui détermine sur quelle carac on joue
+                switch (crossPosition)
+                {
+                    case 2:
+                        crossStrenght = " ";
+                        crossEndurance = "X";
+                        crossAgility = " ";
+                        crossLuck = " ";
+                        break;
+                    case 3:
+                        crossStrenght = " ";
+                        crossEndurance = " ";
+                        crossAgility = "X";
+                        crossLuck = " ";
+                        break;
+                    case 4:
+                        crossStrenght = " ";
+                        crossEndurance = " ";
+                        crossAgility = " ";
+                        crossLuck = "X";
+                        break;
+                    default:
+                        crossStrenght = "X";
+                        crossEndurance = " ";
+                        crossAgility = " ";
+                        crossLuck = " ";
+                        break;
 
+                }
 
-
-
-
-
+            } while (!exit); // exit est vrai si la touche T est pressée et qu'il n'y a pas d'erreurs
 
             // retourner le personnage
 
-            return new Human(name);
+
+            switch (race)
+            {
+                case "Nain":
+                    return new Dwarf(name);
+                    break;
+                case "Elfe":
+                    return new Elf(name);
+                    break;
+                case "Halfelin":
+                    return new Halflin(name);
+                    break;
+                default:
+                    return new Human(name);
+                    break;
+            }
+
+
+
         }
 
         public static Player PreGenHero()
