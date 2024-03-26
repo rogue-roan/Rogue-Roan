@@ -1,4 +1,6 @@
-﻿using Rogue_Roan.Model.Mapping;
+﻿using Rogue_Roan.Enums.Mapping;
+using Rogue_Roan.Model.Mapping;
+using Rogue_Roan.Models.Mapping;
 using System.Text;
 
 namespace Rogue_Roan
@@ -13,7 +15,7 @@ namespace Rogue_Roan
             // display his composition
             dl.DisplayDetail();
 
-            // display each room of the dunjeon
+            //display each room of the dunjeon
             Console.ReadLine();
             foreach (Room roomInDl in dl.DonjonRooms.Keys)
             {
@@ -23,11 +25,11 @@ namespace Rogue_Roan
 
                 string[][] room = roomInDl.DrawRoom();
 
-                for(int i = 0; i < room.GetLength(0);i++)
+                for (int i = 0; i < room.GetLength(0); i++)
                 {
                     StringBuilder sb = new StringBuilder();
 
-                    for (int j = 0; j < room[i].GetLength(0);j++)
+                    for (int j = 0; j < room[i].GetLength(0); j++)
                     {
                         sb.Append(room[i][j]);
                     }
@@ -36,6 +38,12 @@ namespace Rogue_Roan
 
                 Console.ReadLine();
             }
+
+
+            // Antoine Stuff
+            RoomDecoration roomD = new RoomDecoration();
+            WallAttribute wallE = WallAttribute.None;
+            roomD.DecorateRoom(wallE);
         }
     }
 }

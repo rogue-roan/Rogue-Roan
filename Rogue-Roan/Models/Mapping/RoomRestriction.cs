@@ -14,7 +14,7 @@ namespace Rogue_Roan.Models.Mapping
         /// </summary>
         /// <param name="crossRoad">est un tableau de coordonées</param>
 
-        public int[][] crossRoad = new int[RoomDecoration.roomWidth+RoomDecoration.roomHeight-4][];
+        public int[][] crossRoad = new int[RoomDecoration.roomWidth + RoomDecoration.roomHeight-2][];
         int countCross = 0;
         public int[][] CrossRoadAssignation()
         {
@@ -27,7 +27,7 @@ namespace Rogue_Roan.Models.Mapping
             //Ligne horizontale. i commence à 1 car les position en 0 concerne les portes qui me seront fournie
             for (int i = 1; i < RoomDecoration.roomHeight; i++)
             {
-                crossRoad[countCross] = new int[] { i, RoomDecoration.roomHeight / 2 };
+                crossRoad[countCross] = new int[] { RoomDecoration.roomHeight / 2, i };
                 countCross++;
             }
             // Affichage des coordonnées
@@ -44,28 +44,68 @@ namespace Rogue_Roan.Models.Mapping
         /// <param name="wallRoad">est un tableau de coordonées</param>
 
         int countWall = 0;
-        public int[][] wallRoad = new int[(RoomDecoration.roomWidth-2)*2 + (RoomDecoration.roomHeight-2) * 2][];
+        public int[][] wallRoad = new int[(RoomDecoration.roomWidth-2)*2 + (RoomDecoration.roomHeight-2)*2][];
         public int[][] WallRoadAssignation()
         {
+            //Console.WriteLine(RoomDecoration.roomWidth);
+            //// Long du mur nord
+            //for (int i = 1; i < RoomDecoration.roomWidth; i++)
+            //{
+            //    wallRoad[countWall] = new int[] { 1, i }; //Remplacer le 1 par une formule?
+            //}
+            //// Long du mur sud
+            //for (int i = 1; i < RoomDecoration.roomWidth; i++)
+            //{
+            //    wallRoad[countWall] = new int[] { RoomDecoration.roomWidth-1, i };
+            //}
+            //// Long du mur ouest
+            //for (int i = 2; i < RoomDecoration.roomHeight-2; i++)
+            //{
+            //    wallRoad[countWall] = new int[] { i, 1 };
+            //}
+            //// Long du mur est
+            //for (int i = 2; i < RoomDecoration.roomHeight-2; i++)
+            //{
+            //    wallRoad[countWall] = new int[] { i, RoomDecoration.roomWidth-1 };
+            //}
+            //foreach (var position in wallRoad)
+            //{
+            //    Console.WriteLine($"Position: ({position[0]}, {position[1]})");
+            //}
+
+
+
             // Long du mur nord
-            for (int i = 1; i < RoomDecoration.roomWidth; i++)
-            {
-                wallRoad[countWall] = new int[] { 1, i }; //Remplacer le 1 par une formule?
-            }
-            // Long du mur sud
-            for (int i = 1; i < RoomDecoration.roomWidth; i++)
-            {
-                wallRoad[countWall] = new int[] { RoomDecoration.roomWidth-1, i };
-            }
-            // Long du mur ouest
-            for (int i = 2; i < RoomDecoration.roomHeight-2; i++)
+            for (int i = 1; i < RoomDecoration.roomWidth - 1; i++)
             {
                 wallRoad[countWall] = new int[] { i, 1 };
+                countWall++;
             }
-            // Long du mur est
-            for (int i = 2; i < RoomDecoration.roomHeight-2; i++)
+
+            // Long du mur sud
+            for (int i = 1; i < RoomDecoration.roomWidth - 1; i++)
             {
-                wallRoad[countWall] = new int[] { i, RoomDecoration.roomWidth-1 };
+                wallRoad[countWall] = new int[] { i, RoomDecoration.roomHeight - 2 };
+                countWall++;
+            }
+
+            // Long du mur ouest
+            for (int i = 2; i < RoomDecoration.roomHeight - 2; i++)
+            {
+                wallRoad[countWall] = new int[] { 1, i };
+                countWall++;
+            }
+
+            // Long du mur est
+            for (int i = 2; i < RoomDecoration.roomHeight - 2; i++)
+            {
+                wallRoad[countWall] = new int[] { RoomDecoration.roomWidth - 2, i };
+                countWall++;
+            }
+            // Affichage des coordonnées
+            foreach (var position in crossRoad)
+            {
+                Console.WriteLine($"Position: ({position[0]}, {position[1]})");
             }
             return wallRoad;
         }
