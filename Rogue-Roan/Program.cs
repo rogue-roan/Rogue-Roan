@@ -22,7 +22,7 @@ namespace Rogue_Roan
             //Game.Game.Fight(Gimli, Tapdur);
 
             Player player = Game.Game.CreateHero();
-            //Console.WriteLine(player.ToString());
+            Console.WriteLine(player.ToString());
 
             //Console.WriteLine("Appuyez sur une touche...");
             //var key = Console.ReadKey();

@@ -9,21 +9,50 @@ namespace Rogue_Roan.Models
 {
     public abstract class Player : Character
     {
-        public Player(string race, string name, int endRaceBonus, int strRaceBonus, int agiRaceBonus, int luckRaceBonus) : base(race, name, endRaceBonus, strRaceBonus, agiRaceBonus)
+        //public Character(string race, string name, int endurance, int strength, int agility, int endRaceBonus, int strRaceBonus, int agiRaceBonus)
+        //public Monster(string race, string name, int endRaceBonus, int strRaceBonus, int agiRaceBonus) : base(race, name, 0, 0, 0, endRaceBonus, strRaceBonus, agiRaceBonus)
+        public Player(string race, string name, int endRaceBonus, int strRaceBonus, int agiRaceBonus, int luckRaceBonus, int endurance, int strength, int agility, int luck) : base(race, name, endRaceBonus, strRaceBonus, agiRaceBonus, endurance, strength, agility)
         {
-            Dice dice = new Dice(1, 6); // dé utilisé pour la création de personnage
+
+            // créer la chance du Player
+
+            if (endurance != 0 && strength != 0 && agility != 0)
+            {
+                // Création du personnage avec des valeurs spécifiées
+                _luck = luck;
+            }
+            else
+            {
+                // Création du personnage avec des valeurs basées sur des jets de dés
+                Dice dice = new Dice(1, 6); // dé utilisé pour la création de personnage
+                LuckRaceBonus = luckRaceBonus;
+
+                int luckThrow = dice.BestOf(4, 3);
+
+                _luck = luckThrow + luckRaceBonus;
+            }
+
+            // identifier les PV max pour qu'il puisse se régénérer
+
             HPMax = HP;
-            LuckRaceBonus = luckRaceBonus; 
-            _luck = dice.BestOf(4, 3);
         }
         private int HPMax { get; set; }
+
+
+        // valeur minimale
+        private int minValue = 3;
+
         // Chance
         private int _luck;
         public int Luck
         {
             get
             {
-                return _luck + LuckRaceBonus;
+                return _luck;
+            }
+            set
+            {
+                if (value < minValue) { value = minValue; }
             }
         }
         public int LuckRaceBonus { get; set; }

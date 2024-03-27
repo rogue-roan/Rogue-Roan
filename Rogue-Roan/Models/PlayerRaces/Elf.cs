@@ -8,7 +8,7 @@ namespace Rogue_Roan.Models.PlayerRaces
 {
     public class Elf : Player
     {
-        public Elf(string name) : base("Elfe", name, -2, 0, 2, 2)
+        public Elf(string name, int endurance = 0, int strength = 0, int agility = 0, int luck = 0) : base("Elfe", name, -2, 0, 2, 2, endurance, strength, agility, luck)
         {
 
         }

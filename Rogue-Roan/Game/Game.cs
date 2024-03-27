@@ -89,34 +89,43 @@ namespace Rogue_Roan.Game
 
             // initialisation des valeurs
 
-            // Points de création
-            int startCP = 22;
-            int costCP = strenghtCost + enduranceCost + agilityCost + luckCost;
-            int CP = startCP - costCP;
 
             // Force
-            int strenght = 10;
-            string crossStrenght = "X";
-            int strenghtCost = CostCalcul(strenght);
-            int strenghtBonus;
+            int strength = 10;
+            string crossstrength = "X";
+            int strengthCost = CostCalcul(strength);
+            int strengthBonus=0;
+            int strengthTotal = strength+strengthBonus;
 
             // endurance
             int endurance = 10;
             string crossEndurance = " ";
             int enduranceCost = CostCalcul(endurance);
-            int enduranceBonus;
+            int enduranceBonus=0;
+            int enduranceTotal = endurance + enduranceBonus;
+
 
             // Agilité
             int agility = 10;
             string crossAgility = " ";
             int agilityCost = CostCalcul(agility);
-            int agilityBonus;
+            int agilityBonus=0;
+            int agilityTotal = agility + agilityBonus;
+
 
             // Chance
             int luck = 10;
             string crossLuck = " ";
             int luckCost = CostCalcul(luck);
-            int luckBonus;
+            int luckBonus=0;
+            int luckTotal = luck + luckBonus;
+
+
+            // Points de création
+            int startCP = 22;
+            int costCP = strengthCost + enduranceCost + agilityCost + luckCost;
+            int CP = startCP - costCP;
+
 
             // message en cas d'erreur
             string error = "";
@@ -125,31 +134,31 @@ namespace Rogue_Roan.Game
             switch (race)
             {
                 case "Humain":
-                    strenghtBonus = 1;
+                    strengthBonus = 1;
                     enduranceBonus = 0;
                     agilityBonus = 1;
                     luckBonus = 0;
                     break;
                 case "Nain":
-                    strenghtBonus = 2;
+                    strengthBonus = 2;
                     enduranceBonus = 2;
                     agilityBonus = -2;
                     luckBonus = 0;
                     break;
                 case "Elfe":
-                    strenghtBonus = 0;
+                    strengthBonus = 0;
                     enduranceBonus = -2;
                     agilityBonus = 2;
                     luckBonus = 2;
                     break;
                 case "Halfelin":
-                    strenghtBonus = -2;
+                    strengthBonus = -2;
                     enduranceBonus = 0;
                     agilityBonus = 2;
                     luckBonus = 2;
                     break;
                 default:
-                    strenghtBonus = 0;
+                    strengthBonus = 0;
                     enduranceBonus = 0;
                     agilityBonus = 0;
                     luckBonus = 0;
@@ -167,8 +176,14 @@ namespace Rogue_Roan.Game
             {
                 
                 Console.Clear(); // on efface l'écran
-                costCP = strenghtCost + enduranceCost + agilityCost + luckCost; // on recalcule le cout total en CP
+                costCP = strengthCost + enduranceCost + agilityCost + luckCost; // on recalcule le cout total en CP
                 CP = startCP - costCP; // valeur de CP actuelle
+
+                // recalcul des caractéristiques totales : 
+                strengthTotal = strength + strengthBonus;
+                enduranceTotal = endurance + enduranceBonus;
+                agilityTotal = agility + agilityBonus;
+                luckTotal = luck + luckBonus;
 
                 Console.WriteLine($"il vous reste {CP} points");
                 if (CP<0)
@@ -187,10 +202,10 @@ namespace Rogue_Roan.Game
                 Console.WriteLine("╔═══════════════╦════╦════╦═════╦════╗");
                 Console.WriteLine("║Caractéristique║base║race║total║coût║");
                 Console.WriteLine("╠═══════════════╬════╬════╬═════╬════╣");
-                Console.WriteLine($"║[{crossStrenght}]Force\t║ {(strenght<10?" "+strenght:strenght)} ║{(strenghtBonus >= 0 ? " " + strenghtBonus : strenghtBonus)}  ║ {(strenght+strenghtBonus<10?" "+ (strenght + strenghtBonus): (strenght + strenghtBonus))}  ║{(strenghtCost.ToString().Length == 1 ? "  " + strenghtCost : strenghtCost.ToString().Length == 2 ? " " + strenghtCost : strenghtCost)} ║");
-                Console.WriteLine($"║[{crossEndurance}]Endurance\t║ {(endurance<10?" "+endurance:endurance)} ║{(enduranceBonus >=0 ? " " + enduranceBonus : enduranceBonus)}  ║ {(endurance + enduranceBonus<10?" "+ (endurance + enduranceBonus): (endurance + enduranceBonus))}  ║{(enduranceCost.ToString().Length == 1 ? "  " + enduranceCost : enduranceCost.ToString().Length == 2 ? " " + enduranceCost : enduranceCost)} ║");
-                Console.WriteLine($"║[{crossAgility}]Agilite\t║ {(agility < 10 ? " " + agility : agility)} ║{(agilityBonus >= 0 ? " " + agilityBonus : agilityBonus)}  ║ {(agility + agilityBonus<10?" "+(agility+agilityBonus): (agility + agilityBonus))}  ║{(agilityCost.ToString().Length == 1 ? "  " + agilityCost : agilityCost.ToString().Length == 2 ? " " + agilityCost : agilityCost)} ║");
-                Console.WriteLine($"║[{crossLuck}]Chance\t║ {(luck < 10 ? " " + luck : luck)} ║{(luckBonus >= 0 ? " " + luckBonus : luckBonus)}  ║ {(luck + luckBonus < 10 ? " " + (luck + luckBonus) : (luck + luckBonus))}  ║{(luckCost.ToString().Length == 1 ? "  " + luckCost : luckCost.ToString().Length == 2 ? " " + luckCost : luckCost)} ║");
+                Console.WriteLine($"║[{crossstrength}]Force\t║ {(strength<10?" "+strength:strength)} ║{(strengthBonus >= 0 ? " " + strengthBonus : strengthBonus)}  ║ {(strengthTotal<10?" "+ strengthTotal : strengthTotal)}  ║{(strengthCost.ToString().Length == 1 ? "  " + strengthCost : strengthCost.ToString().Length == 2 ? " " + strengthCost : strengthCost)} ║");
+                Console.WriteLine($"║[{crossEndurance}]Endurance\t║ {(endurance<10?" "+endurance:endurance)} ║{(enduranceBonus >=0 ? " " + enduranceBonus : enduranceBonus)}  ║ {(enduranceTotal<10?" "+ enduranceTotal: enduranceTotal)}  ║{(enduranceCost.ToString().Length == 1 ? "  " + enduranceCost : enduranceCost.ToString().Length == 2 ? " " + enduranceCost : enduranceCost)} ║");
+                Console.WriteLine($"║[{crossAgility}]Agilite\t║ {(agility < 10 ? " " + agility : agility)} ║{(agilityBonus >= 0 ? " " + agilityBonus : agilityBonus)}  ║ {(agilityTotal<10?" "+agilityTotal: agilityTotal)}  ║{(agilityCost.ToString().Length == 1 ? "  " + agilityCost : agilityCost.ToString().Length == 2 ? " " + agilityCost : agilityCost)} ║");
+                Console.WriteLine($"║[{crossLuck}]Chance\t║ {(luck < 10 ? " " + luck : luck)} ║{(luckBonus >= 0 ? " " + luckBonus : luckBonus)}  ║ {(luckTotal< 10 ? " " + luckTotal : luckTotal)}  ║{(luckCost.ToString().Length == 1 ? "  " + luckCost : luckCost.ToString().Length == 2 ? " " + luckCost : luckCost)} ║");
                 Console.WriteLine("╚═══════════════╩════╩════╩═════╩════╝");
                 Console.WriteLine();
                 Console.WriteLine($"utilisez les fléches haut/bas pour sélectioner la caractéristique");
@@ -206,13 +221,13 @@ namespace Rogue_Roan.Game
                         switch (crossPosition)
                         {
                             case 1:
-                                if (strenght<=7)
+                                if (strength<=7)
                                 {
                                     error = "la force ne peut pas être inférieure à 7";
                                 }
                                 else
                                 {
-                                    strenght--;
+                                    strength--;
                                 }
                                 break;
                             case 2:
@@ -261,13 +276,13 @@ namespace Rogue_Roan.Game
                         switch (crossPosition)
                         {
                             case 1:
-                                if (strenght >= 18)
+                                if (strength >= 18)
                                 {
                                     error = "la force ne peut pas être supérieure à 18";
                                 }
                                 else
                                 {
-                                    strenght++;
+                                    strength++;
                                 }
                                 break;
                             case 2:
@@ -328,7 +343,7 @@ namespace Rogue_Roan.Game
 
 
                 // on recalcule le cout de chaque caractéristique
-                strenghtCost = CostCalcul(strenght);
+                strengthCost = CostCalcul(strength);
                 enduranceCost = CostCalcul(endurance);
                 agilityCost = CostCalcul(agility);
                 luckCost = CostCalcul(luck);
@@ -337,25 +352,25 @@ namespace Rogue_Roan.Game
                 switch (crossPosition)
                 {
                     case 2:
-                        crossStrenght = " ";
+                        crossstrength = " ";
                         crossEndurance = "X";
                         crossAgility = " ";
                         crossLuck = " ";
                         break;
                     case 3:
-                        crossStrenght = " ";
+                        crossstrength = " ";
                         crossEndurance = " ";
                         crossAgility = "X";
                         crossLuck = " ";
                         break;
                     case 4:
-                        crossStrenght = " ";
+                        crossstrength = " ";
                         crossEndurance = " ";
                         crossAgility = " ";
                         crossLuck = "X";
                         break;
                     default:
-                        crossStrenght = "X";
+                        crossstrength = "X";
                         crossEndurance = " ";
                         crossAgility = " ";
                         crossLuck = " ";
@@ -371,16 +386,16 @@ namespace Rogue_Roan.Game
             switch (race)
             {
                 case "Nain":
-                    return new Dwarf(name);
+                    return new Dwarf(name, enduranceTotal, strengthTotal, agilityTotal, luckTotal);
                     break;
                 case "Elfe":
-                    return new Elf(name);
+                    return new Elf(name, enduranceTotal, strengthTotal, agilityTotal, luckTotal);
                     break;
                 case "Halfelin":
-                    return new Halflin(name);
+                    return new Halflin(name, enduranceTotal, strengthTotal, agilityTotal, luckTotal);
                     break;
                 default:
-                    return new Human(name);
+                    return new Human(name, enduranceTotal, strengthTotal, agilityTotal, luckTotal);
                     break;
             }
 

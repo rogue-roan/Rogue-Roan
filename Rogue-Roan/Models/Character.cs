@@ -16,27 +16,50 @@ namespace Rogue_Roan.Models
 
 
         /// <summary>
-        /// 
+        /// creation du personnage si je donne les caracs en dur
         /// </summary>
+        /// <param name="race">la race du personnage</param>
         /// <param name="name">le nom du personnage</param>
-        /// <param name="endRaceBonus">son bonus racial d'endurance</param>
-        /// <param name="strRaceBonus">son bonus racial de force</param>
-        /// <param name="agiRaceBonus">son bonus racial d'agilité</param>
-        public Character(string race, string name, int endRaceBonus, int strRaceBonus, int agiRaceBonus)
+        /// <param name="endurance">son endurance</param>
+        /// <param name="strength">sa force</param>
+        /// <param name="agility">son agilité</param>
+            public Character(string race, string name, int endRaceBonus = 0, int strRaceBonus = 0, int agiRaceBonus = 0, int endurance = 0, int strength = 0, int agility = 0)
         {
             Name = name;
             Race = race;
-            Dice dice = new Dice(1, 6); // dé utilisé pour la création de personnage
-            EndRaceBonus = endRaceBonus;
-            StrRaceBonus = strRaceBonus;
-            AgiRaceBonus = agiRaceBonus;
-            
-            _strenght = dice.BestOf(4, 3);
-            _endurance = dice.BestOf(4, 3);
-            _agility = dice.BestOf(4, 3);
-            
+
+            if (endurance != 0 && strength != 0 && agility != 0)
+            {
+                // Création du personnage avec des valeurs spécifiées
+                _strength = strength;
+                _endurance = endurance;
+                _agility = agility;
+            }
+            else
+            {
+                // Création du personnage avec des valeurs basées sur des jets de dés
+                Dice dice = new Dice(1, 6); // dé utilisé pour la création de personnage
+                EndRaceBonus = endRaceBonus;
+                StrRaceBonus = strRaceBonus;
+                AgiRaceBonus = agiRaceBonus;
+
+                int strengthThrow = dice.BestOf(4, 3);
+                int enduranceThrow = dice.BestOf(4, 3);
+                int agilityThrow = dice.BestOf(4, 3);
+
+                _strength = strengthThrow + strRaceBonus;
+                _endurance = enduranceThrow + endRaceBonus;
+                _agility = agilityThrow + agiRaceBonus;
+            }
+
             HP = 10 + Modifiers.CalculateModifier(Endurance);
         }
+
+
+
+
+
+
 
         // positionnement du personnage
         public int PosX { get; set; }
@@ -46,13 +69,21 @@ namespace Rogue_Roan.Models
         public string Name { get; set; }
         public string Race { get; set; }
 
+        // valeur minimale
+        private int minValue = 3;
+
+
         // Force
-        private int _strenght;
-        public int Strenght
+        private int _strength;
+        public int Strength 
         {
             get
             {
-                return _strenght + StrRaceBonus;
+                return _strength;
+            }
+            set
+            {
+                if (value < minValue) { value = minValue; }
             }
         }
         public int StrRaceBonus { get; set; }
@@ -63,7 +94,11 @@ namespace Rogue_Roan.Models
         {
             get
             {
-                return _endurance + EndRaceBonus;
+                return _endurance;
+            }
+            set
+            {
+                if (value < minValue) { value = minValue; }
             }
         }
         public int EndRaceBonus { get; set; }
@@ -74,7 +109,11 @@ namespace Rogue_Roan.Models
         {
             get
             {
-                return _agility + AgiRaceBonus;
+                return _agility;
+            }
+            set
+            {
+                if (value < minValue) { value = minValue; }
             }
         }
         public int AgiRaceBonus { get; set; }
@@ -133,7 +172,7 @@ namespace Rogue_Roan.Models
             if (hit >= valueToHitTarget)
             {
                 // dégâts = 1d6+modificateur de force
-                int damageThrow = diceForDamages.Throw() + Modifiers.CalculateModifier(Strenght);
+                int damageThrow = diceForDamages.Throw() + Modifiers.CalculateModifier(Strength);
                 // les dégâts sont au minimum égaux à 1
                 int damages = damageThrow < 1 ? 1 : damageThrow;
                 Console.WriteLine($"{Name} touche {target.Name} et fait {damages} points de dégâts");
@@ -148,7 +187,7 @@ namespace Rogue_Roan.Models
         // override de Tostring pour qu'il affiche le texte lorsque personnage.ToString();
         public override string ToString()
         {
-            return $"{Name} - Pv : {HP}, Endu : {Endurance}, Force : {Strenght}, Agilite : {Agility}";
+            return $"{Name} - Pv : {HP}, Endu : {Endurance}, Force : {Strength}, Agilite : {Agility}";
         }
     }
 }

@@ -10,7 +10,7 @@ namespace Rogue_Roan.Models.Ennemies
 {
     public class Orc : Monster
     {
-        public Orc(string name) : base("Orque", name, 1, 2, -2)
+        public Orc(string name, int endRaceBonus, int strRaceBonus, int agiRaceBonus) : base("Orque", name, 1, 2, -2)
         {
             // donne 1D200 po
             Dice diceGold = new Dice(1, 200);
