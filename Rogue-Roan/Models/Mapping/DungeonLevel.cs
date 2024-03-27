@@ -17,27 +17,94 @@ namespace Rogue_Roan.Model.Mapping
         {
             if (minNumberOfRoom == 0) minNumberOfRoom = 5;
 
-            startingRoom = new Room(false, WallAttribute.EastOpening);
+            startingRoom = new Room(true);
             DonjonRooms.Add(startingRoom, new RoomPosition());
 
-            DonjonRooms.Add(new Room(false, WallAttribute.WestOpening), new RoomPosition(0,10));
-            /*for (int i = 0; i < minNumberOfRoom - 1; i++)
+            Dictionary<RoomPosition, WallAttribute> howToCompleteLevel = ToValidate();
+
+            while(!IsValid())
             {
-            }/**/
+                foreach (RoomPosition position in howToCompleteLevel.Keys)
+                {
+                    Room nextRoom = null;
+
+                    WallAttribute opposite = WallAttribute.None;
+                    if (howToCompleteLevel[position].HasFlag(WallAttribute.NorthDoor)) opposite = WallAttribute.SouthDoor;
+                    else if (howToCompleteLevel[position].HasFlag(WallAttribute.SouthDoor)) opposite = WallAttribute.NorthDoor;
+                    else if (howToCompleteLevel[position].HasFlag(WallAttribute.WestDoor)) opposite = WallAttribute.EastDoor;
+                    else if (howToCompleteLevel[position].HasFlag(WallAttribute.EastDoor)) opposite = WallAttribute.WestDoor;
+
+                    else if (howToCompleteLevel[position].HasFlag(WallAttribute.NorthOpening)) opposite = WallAttribute.SouthOpening;
+                    else if (howToCompleteLevel[position].HasFlag(WallAttribute.SouthOpening)) opposite = WallAttribute.NorthOpening;
+                    else if (howToCompleteLevel[position].HasFlag(WallAttribute.WestOpening)) opposite = WallAttribute.EastOpening;
+                    else if (howToCompleteLevel[position].HasFlag(WallAttribute.EastOpening)) opposite = WallAttribute.WestOpening;
+
+                    nextRoom = new Room(DonjonRooms.Keys.Count < minNumberOfRoom, opposite);
+                    // Must be change for each orientation of each room
+
+                    RoomPosition futurPosition = null;
+                    if (opposite.HasFlag(WallAttribute.NorthDoor) || opposite.HasFlag(WallAttribute.NorthOpening))
+                        futurPosition = new RoomPosition(position.TopOrigin + nextRoom.Height, position.LeftOrigin);
+                    else if (opposite.HasFlag(WallAttribute.SouthDoor) || opposite.HasFlag(WallAttribute.SouthOpening))
+                        futurPosition = new RoomPosition(position.TopOrigin - nextRoom.Height, position.LeftOrigin);
+                    else if (opposite.HasFlag(WallAttribute.WestDoor) || opposite.HasFlag(WallAttribute.WestOpening))
+                        futurPosition = new RoomPosition(position.TopOrigin, position.LeftOrigin + nextRoom.Width);
+                    else if (opposite.HasFlag(WallAttribute.EastDoor) || opposite.HasFlag(WallAttribute.EastOpening))
+                        futurPosition = new RoomPosition(position.TopOrigin, position.LeftOrigin - nextRoom.Width);
+
+                    if (futurPosition is not null)
+                    {
+                        if(DonjonRooms.Values.Where(position => position.Equals(futurPosition)).Count() > 0)
+                        {
+                            Room room = GetRoomWithThisPosition(futurPosition.TopOrigin, futurPosition.LeftOrigin);
+                            
+                            room.ReBuild(opposite);
+                        }
+                        else DonjonRooms.Add(nextRoom, futurPosition);
+                    }
+                }
+
+                howToCompleteLevel = ToValidate();
+            }
+
+            normalizePosition();
+        }
+
+        /// <summary>
+        /// Change position so there is only positive position
+        /// And the lowest value possible
+        /// </summary>
+        private void normalizePosition()
+        {
+            int? minLine = null, minRow = null;
+            foreach(Room room in DonjonRooms.Keys)
+            {
+                if (minLine is null || DonjonRooms[room].TopOrigin < minLine) minLine = DonjonRooms[room].TopOrigin;
+                if (minRow is null || DonjonRooms[room].LeftOrigin < minRow) minRow = DonjonRooms[room].LeftOrigin;
+            }
+
+            if((minLine != 0 || minRow != 0 ) && minLine is not null && minRow is not null)
+            {
+                foreach (Room room in DonjonRooms.Keys)
+                {
+                    DonjonRooms[room] = new RoomPosition(DonjonRooms[room].TopOrigin - minLine.Value, DonjonRooms[room].LeftOrigin - minRow.Value);
+                }
+            }
         }
         
         /// <summary>
         /// This function will indicate if all opening and door of each room are connected to something
-        /// 
-        /// TODO Complete this function
         /// </summary>
         /// <returns>true if valid</returns>
-        public bool isValid()
+        public bool IsValid()
         {
-            return ToValidate() == WallAttribute.None ? true : false;
+            return ToValidate().Keys.Count() < 1;
         }
-
-        private WallAttribute ToValidate()
+        /// <summary>
+        /// This function will change
+        /// </summary>
+        /// <returns></returns>
+        public Dictionary<RoomPosition, WallAttribute> ToValidate()
         {
             List<RoomPosition> doorN = new List<RoomPosition>();
             List<RoomPosition> doorS = new List<RoomPosition>();
@@ -49,8 +116,16 @@ namespace Rogue_Roan.Model.Mapping
             List<RoomPosition> openingW = new List<RoomPosition>();
             List<RoomPosition> openingE = new List<RoomPosition>();
 
+            // Loop in all room currently in this level
             foreach (Room roomInDl in this.DonjonRooms.Keys)
             {
+                // each iteration :
+                // check a case about one of his possible wall attribute (for example a door to his north wall)
+                // if ok, take the origin position of the room to find the door/opening position
+                // check if there is a possible door/opening next (opposite wall and with a good poistion)
+                // if this candidate exists, we can remove it
+                // if not, we can store the position of this door/opening for later
+
                 if (roomInDl.HasThisWallAttribute(WallAttribute.NorthDoor))
                 {
                     RoomPosition originOfThisRoom = DonjonRooms[roomInDl];
@@ -97,7 +172,7 @@ namespace Rogue_Roan.Model.Mapping
                     pointOfTheOpening.LeftOrigin += roomInDl.Width / 2;
                     pointOfTheOpening.TopOrigin += roomInDl.Height - 1;
 
-                    RoomPosition? northCandidate = openingS.Find(roomPosition => (roomPosition.LeftOrigin == pointOfTheOpening.LeftOrigin && roomPosition.TopOrigin - 1 == pointOfTheOpening.TopOrigin));
+                    RoomPosition? northCandidate = openingN.Find(roomPosition => (roomPosition.LeftOrigin == pointOfTheOpening.LeftOrigin && roomPosition.TopOrigin - 1 == pointOfTheOpening.TopOrigin));
 
                     if (northCandidate is null) openingS.Add(pointOfTheOpening);
                     else openingN.Remove(northCandidate);
@@ -156,24 +231,33 @@ namespace Rogue_Roan.Model.Mapping
                 }
             }
 
-            // conditionnal 2 : room position (room overlapsed)
-            // conditionnal 3 : doors connected
+            // Pull out what is needed to complete this level
+            Dictionary<RoomPosition, WallAttribute> toValidate = new Dictionary<RoomPosition, WallAttribute>();
 
-            WallAttribute attribute = WallAttribute.None;
+            if (doorN.Count() > 0) fillValidate(toValidate, doorN, WallAttribute.NorthDoor);
+            if (doorS.Count() > 0) fillValidate(toValidate, doorS, WallAttribute.SouthDoor);
+            if (doorW.Count() > 0) fillValidate(toValidate, doorW, WallAttribute.WestDoor);
+            if (doorE.Count() > 0) fillValidate(toValidate, doorE, WallAttribute.EastDoor);
 
-            if (doorN.Count() > 0) attribute |= WallAttribute.SouthDoor; 
-            if (doorS.Count() > 0) attribute |= WallAttribute.NorthDoor;
+            if (openingN.Count() > 0) fillValidate(toValidate, openingN, WallAttribute.NorthOpening);
+            if (openingS.Count() > 0) fillValidate(toValidate, openingS, WallAttribute.SouthOpening);
+            if (openingW.Count() > 0) fillValidate(toValidate, openingW, WallAttribute.WestOpening);
+            if (openingE.Count() > 0) fillValidate(toValidate, openingE, WallAttribute.EastOpening);
 
-            if (doorE.Count() > 0) attribute |= WallAttribute.WestDoor;
-            if (doorW.Count() > 0) attribute |=  WallAttribute.EastDoor;
-
-            if (openingN.Count() > 0) attribute |= WallAttribute.SouthOpening;
-            if (openingS.Count() > 0) attribute |= WallAttribute.NorthOpening;
-
-            if (openingE.Count() > 0) attribute |= WallAttribute.WestOpening;
-            if (openingW.Count() > 0) attribute |= WallAttribute.EastOpening;
-
-            return attribute;
+            return toValidate;
+        }
+        private void fillValidate (Dictionary<RoomPosition, WallAttribute> dictionnary, List<RoomPosition> positions, WallAttribute wallType)
+        {
+            foreach (RoomPosition position in positions)
+            {
+                Room? room = GetRoomWithThisPosition(position.TopOrigin, position.LeftOrigin);
+                if (room is not null)
+                {
+                    //if (dictionnary.ContainsKey(DonjonRooms[room])) dictionnary[DonjonRooms[room]] |= wallType;
+                    //else dictionnary.Add(DonjonRooms[room], wallType);
+                    if (!dictionnary.ContainsKey(DonjonRooms[room])) dictionnary.Add(DonjonRooms[room], wallType);
+                }
+            }
         }
 
         #region Debug Function
@@ -186,7 +270,7 @@ namespace Rogue_Roan.Model.Mapping
             {
                 Console.WriteLine($"{roomInDl} en position : {this.DonjonRooms.GetValueOrDefault(roomInDl).LeftOrigin}, {this.DonjonRooms.GetValueOrDefault(roomInDl).TopOrigin}");
             }
-            Console.WriteLine($"This dunjeon is {(isValid() ? "Valid":"not Valid")}");
+            Console.WriteLine($"This dunjeon is {(IsValid() ? "Valid":"not Valid")}");
         }
 
         public string[][] DrawLevel()
@@ -217,7 +301,7 @@ namespace Rogue_Roan.Model.Mapping
                 {
                     for (int j = 0; j < roomInDl.Content[i].GetLength(0); j++)
                     {
-                        canvas[DonjonRooms[roomInDl].TopOrigin + i][DonjonRooms[roomInDl].LeftOrigin + j] = roomInDl.Content[i][j] == " "? ".": roomInDl.Content[i][j];
+                        canvas[DonjonRooms[roomInDl].TopOrigin + i][DonjonRooms[roomInDl].LeftOrigin + j] = roomInDl.Content[i][j] == " "? " ": roomInDl.Content[i][j];
                     }
                 }
             }
@@ -225,6 +309,21 @@ namespace Rogue_Roan.Model.Mapping
             return canvas;
         }
         
+        public Room? GetRoomWithThisPosition(int line, int row)
+        {
+            foreach(Room roomInThisLevel in DonjonRooms.Keys)
+            {
+                int firstLine = DonjonRooms[roomInThisLevel].TopOrigin, lastLine = firstLine + roomInThisLevel.Height - 1;
+                int firstRow = DonjonRooms[roomInThisLevel].LeftOrigin, lastRow = firstRow + roomInThisLevel.Width - 1;
+
+                if(line >= firstLine && line <= lastLine &&
+                    row >= firstRow && row <= lastRow)
+                {
+                    return roomInThisLevel;
+                }
+            }
+            return null;
+        }
     #endregion
 }
     public class RoomPosition : ICloneable
@@ -242,6 +341,13 @@ namespace Rogue_Roan.Model.Mapping
         public object Clone()
         {
             return new RoomPosition(top:TopOrigin, left:LeftOrigin);
+        }
+        public override bool Equals(object? obj)
+        {
+            if (obj is null) return false;
+            else if (obj.GetType() != typeof(RoomPosition)) return false;
+            else if (((RoomPosition)obj).TopOrigin != this.TopOrigin || ((RoomPosition)obj).LeftOrigin != this.LeftOrigin) return false;
+            return true;
         }
     }
 }

@@ -42,7 +42,6 @@ namespace Rogue_Roan.Model.Mapping
             Height = 10;
             Width = 10;
             if (randomGeneration) WallAtribute = randomWallAttribute(constraint);
-            // TODO define a new method to assign attribute to a room
             else WallAtribute = constraint;
 
             Content = DrawRoom();
@@ -63,6 +62,7 @@ namespace Rogue_Roan.Model.Mapping
             int doors = random.Next(0, 16);
 
             int opening = random.Next(0, 16);
+            opening = (int)((WallAttribute)opening & ~constraint);
 
             // rule opening > door
             doors = doors & ~opening;
@@ -92,6 +92,14 @@ namespace Rogue_Roan.Model.Mapping
                 }
             }
 
+            PutSomeWall(room);
+
+
+            return room;
+        }
+        private void PutSomeWall(string[][] room)
+        {
+
             // put some wall
             for (int i = 0; i < room.GetLength(0); i++)
             {
@@ -103,19 +111,20 @@ namespace Rogue_Roan.Model.Mapping
                     {
                         if (HasThisWallAttribute(WallAttribute.NorthOpening))
                         {
-                            if((!HasThisWallAttribute(WallAttribute.WestOpening) && j == 0) ||
+                            if ((!HasThisWallAttribute(WallAttribute.WestOpening) && j == 0) ||
                                 (!HasThisWallAttribute(WallAttribute.EastOpening) && j == room[i].GetLength(0) - 1))
                             {
-                                room[i][j] = "=";
+                                DrawWall(room, i, j);
                             }
                         }
                         else if (HasThisWallAttribute(WallAttribute.NorthDoor))
                         {
-                            if (j != room[i].GetLength(0) / 2) room[i][j] = "=";
+                            if (j != room[i].GetLength(0) / 2)
+                                DrawWall(room, i, j);
                         }
                         else
                         {
-                            room[i][j] = "=";
+                            DrawWall(room, i, j);
                         }
                     }
                     // last line
@@ -126,16 +135,17 @@ namespace Rogue_Roan.Model.Mapping
                             if ((!HasThisWallAttribute(WallAttribute.WestOpening) && j == 0) ||
                                 (!HasThisWallAttribute(WallAttribute.EastOpening) && j == room[i].GetLength(0) - 1))
                             {
-                                room[i][j] = "=";
+                                DrawWall(room, i, j);
                             }
                         }
                         else if (HasThisWallAttribute(WallAttribute.SouthDoor))
                         {
-                            if (j != room[i].GetLength(0) / 2) room[i][j] = "=";
+                            if (j != room[i].GetLength(0) / 2)
+                                DrawWall(room, i, j);
                         }
                         else
                         {
-                            room[i][j] = "=";
+                            DrawWall(room, i, j);
                         }
                     }
 
@@ -148,16 +158,17 @@ namespace Rogue_Roan.Model.Mapping
                             if ((!HasThisWallAttribute(WallAttribute.NorthOpening) && i == 0) ||
                                 (!HasThisWallAttribute(WallAttribute.SouthOpening) && i == room[i].GetLength(0) - 1))
                             {
-                                room[i][j] = "=";
+                                DrawWall(room, i, j);
                             }
                         }
                         else if (HasThisWallAttribute(WallAttribute.WestDoor))
                         {
-                            if (i != room[i].GetLength(0) / 2) room[i][j] = "=";
+                            if (i != room[i].GetLength(0) / 2)
+                                DrawWall(room, i, j);
                         }
                         else
                         {
-                            room[i][j] = "=";
+                            DrawWall(room, i, j);
                         }
                     }
                     // last column
@@ -168,24 +179,34 @@ namespace Rogue_Roan.Model.Mapping
                             if ((!HasThisWallAttribute(WallAttribute.NorthOpening) && i == 0) ||
                                 (!HasThisWallAttribute(WallAttribute.SouthOpening) && i == room[i].GetLength(0) - 1))
                             {
-                                room[i][j] = "=";
+                                DrawWall(room, i, j);
                             }
                         }
                         else if (HasThisWallAttribute(WallAttribute.EastDoor))
                         {
-                            if (i != room[i].GetLength(0) / 2) room[i][j] = "=";
+                            if (i != room[i].GetLength(0) / 2)
+                                DrawWall(room, i, j);
                         }
                         else
                         {
-                            room[i][j] = "=";
+                            DrawWall(room, i, j);
                         }
                     }
                 }
             }
-
-            return room;
+        }
+        private void DrawWall(string[][] room, int line, int row)
+        {
+            room[line][row] = "=";
         }
 
+        public void ReBuild(WallAttribute newAttribute)
+        {
+            this.WallAtribute |= newAttribute;
+
+            Content = DrawRoom();
+            //PutSomeWall(Content);
+        }
         #region Debug Function
         /// <summary>
         /// Function that return if this room has this attribute
