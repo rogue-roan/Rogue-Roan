@@ -14,21 +14,19 @@ namespace Rogue_Roan.Models.Mapping
         /// </summary>
         /// <param name="crossRoad">est un tableau de coordonées</param>
 
-        public int[][] crossRoad = new int[RoomDecoration.roomWidth + RoomDecoration.roomHeight-2][];
-        int countCross = 0;
-        public int[][] CrossRoadAssignation()
+        private List<int[]> crossRoad = new List<int[]>();
+
+        public List<int[]> crossRoadAssignation()
         {
-            // Ligne vertical. i commence à 1 car les position en 0 concerne les portes qui me seront fournie
+            // Ligne vertical. i commence à 1 car les position en 0 concernent les portes qui me seront fournie
             for (int i = 1; i < RoomDecoration.roomWidth; i++)
             {
-                crossRoad[countCross] = new int[] { i, RoomDecoration.roomWidth / 2 };
-                countCross++;
+                crossRoad.Add(new int [] { i, RoomDecoration.roomWidth / 2 });
             }
             //Ligne horizontale. i commence à 1 car les position en 0 concerne les portes qui me seront fournie
             for (int i = 1; i < RoomDecoration.roomHeight; i++)
             {
-                crossRoad[countCross] = new int[] { RoomDecoration.roomHeight / 2, i };
-                countCross++;
+                crossRoad.Add(new int[] { RoomDecoration.roomHeight / 2, i });
             }
             // Affichage des coordonnées
             foreach (var position in crossRoad)
@@ -37,6 +35,7 @@ namespace Rogue_Roan.Models.Mapping
             }
             return crossRoad;
         }
+   
 
         /// <summary>
         /// Création d'un chemin longeant les murs où le décor ne pourra pas etre posé.

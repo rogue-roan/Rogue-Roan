@@ -1,7 +1,6 @@
 ﻿using Rogue_Roan.Enums.Mapping;
 using Rogue_Roan.Model.Mapping;
 using Rogue_Roan.Models.Mapping;
-using System.Text;
 
 namespace Rogue_Roan
 {
@@ -16,34 +15,49 @@ namespace Rogue_Roan
             dl.DisplayDetail();
 
             //display each room of the dunjeon
-            Console.ReadLine();
-            foreach (Room roomInDl in dl.DonjonRooms.Keys)
-            {
-                Console.Clear();
+            //Console.ReadLine();
+            //foreach (Room roomInDl in dl.DonjonRooms.Keys)
+            //{
+            //    Console.Clear();
 
-                Console.WriteLine($"{roomInDl} en position : {dl.DonjonRooms.GetValueOrDefault(roomInDl).LeftOrigin}, {dl.DonjonRooms.GetValueOrDefault(roomInDl).TopOrigin}");
+            //    Console.WriteLine($"{roomInDl} en position : {dl.DonjonRooms.GetValueOrDefault(roomInDl).LeftOrigin}, {dl.DonjonRooms.GetValueOrDefault(roomInDl).TopOrigin}");
 
-                string[][] room = roomInDl.DrawRoom();
+            //    string[][] room = roomInDl.DrawRoom();
 
-                for (int i = 0; i < room.GetLength(0); i++)
-                {
-                    StringBuilder sb = new StringBuilder();
+            //    for (int i = 0; i < room.GetLength(0); i++)
+            //    {
+            //        StringBuilder sb = new StringBuilder();
 
-                    for (int j = 0; j < room[i].GetLength(0); j++)
-                    {
-                        sb.Append(room[i][j]);
-                    }
-                    Console.WriteLine(sb.ToString());
-                }
+            //        for (int j = 0; j < room[i].GetLength(0); j++)
+            //        {
+            //            sb.Append(room[i][j]);
+            //        }
+            //        Console.WriteLine(sb.ToString());
+            //    }
 
-                Console.ReadLine();
-            }
+            //    Console.ReadLine();
+            //}
 
 
             // Antoine Stuff
             RoomDecoration roomD = new RoomDecoration();
             WallAttribute wallE = WallAttribute.None;
             roomD.DecorateRoom(wallE);
+
+            // Floor
+            void floor()
+            {
+                RoomFloor roomFloor = new RoomFloor();
+                List<int[]> tempList = roomFloor.generateRandomFloor();
+                Console.WriteLine("Tableau venant de floor:");
+                foreach (var item in tempList)
+                {                    
+                    Console.WriteLine($"Position: ({item[0]}, {item[1]})" );
+                }
+            }
+            floor();
+
+
         }
     }
 }
